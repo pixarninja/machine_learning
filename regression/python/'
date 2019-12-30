@@ -1,0 +1,55 @@
+import pandas as pd
+import numpy as np
+import random
+import utilities
+
+# Definition of Least Squares Linear Regression algorithm.
+def my_lslr(dataset, max_epochs, alpha):
+    # Initialize local variables
+    coeffs = [0.0 for i in range(len(dataset.iloc[0,:]))]
+    losses = []
+    set_epochs = 0
+    epochs = 0
+
+    while epochs < max_epochs:
+        coeffs, losses, set_epochs = sgd(dataset, max_epochs, alpha)
+        epochs += set_epochs
+
+    print(epochs)
+    return coeffs, losses
+
+# Definition of Stochastic Gradient Descent algorithm.
+def sgd(dataset, max_epochs, alpha):
+    # Initialize local variables
+    coeffs = [0.0 for i in range(len(dataset.iloc[0,:]))]
+    losses = []
+    set_epochs = 0
+
+    for index, data in dataset.iterrows():
+        row = [1, data['AT'], data['V'], data['AP'], data['RH']]
+
+        # Setup y and y_hat.
+        y_real = data['PE']
+        y_pred = np.dot(row, coeffs)
+
+        # Calculate next values.
+        for i in range(0, len(row)):
+            coeffs[i] = coeffs[i] - alpha * gradient(i, row[i], y_real, y_pred)
+
+        # Record loss for this epoch.
+        if index % 5:
+            losses.append(utilities.loss(y_real, y_pred))
+
+        # Stop conditions.
+        set_epochs += 1
+        if set_epochs >= max_epochs:
+            break
+
+    return coeffs, losses, set_epochs
+
+# Definition for approximating the gradient of the objective function.
+def gradient(i, x, y_real, y_pred):
+    if i > 0:
+        return (-2 * x * (y_real - y_pred))
+    else:
+        return (-2 * (y_real - y_pred))

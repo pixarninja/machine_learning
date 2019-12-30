@@ -1,0 +1,435 @@
+\def\year{2019}\relax
+\documentclass[letterpaper]{article} % DO NOT CHANGE THIS
+\usepackage{aaai19}  % DO NOT CHANGE THIS
+\usepackage{times}  % DO NOT CHANGE THIS
+\usepackage{helvet} % DO NOT CHANGE THIS
+\usepackage{courier}  % DO NOT CHANGE THIS
+\usepackage[hyphens]{url}  % DO NOT CHANGE THIS
+\usepackage{graphicx} % DO NOT CHANGE THIS
+\urlstyle{rm} % DO NOT CHANGE THIS
+\def\UrlFont{\rm}  % DO NOT CHANGE THIS
+\usepackage{graphicx}  % DO NOT CHANGE THIS
+\frenchspacing  % DO NOT CHANGE THIS
+\setlength{\pdfpagewidth}{8.5in}  % DO NOT CHANGE THIS
+\setlength{\pdfpageheight}{11in}  % DO NOT CHANGE THIS
+\usepackage{amsmath, amssymb}
+\graphicspath{{images/}}
+\nocopyright
+\usepackage{array}
+\usepackage{caption,subcaption}
+\usepackage{xcolor}
+\usepackage[outputdir=output]{minted}
+\usepackage{changepage}
+%PDF Info Is REQUIRED.
+% For /Author, add all authors within the parentheses, separated by commas. No accents or commands.
+% For /Title, add Title in Mixed Case. No accents or commands. Retain the parentheses.
+\pdfinfo{
+/Title (Homework 4: Convolutional Neural Networks)
+/Author (Mark Wesley Harris)
+} %Leave this	
+% /Title ()
+% Put your actual complete title (no codes, scripts, shortcuts, or LaTeX commands) within the parentheses in mixed case
+% Leave the space between \Title and the beginning parenthesis alone
+% /Author ()
+% Put your actual complete list of authors (no codes, scripts, shortcuts, or LaTeX commands) within the parentheses in mixed case. 
+% Each author should be only by a comma. If the name contains accents, remove them. If there are any LaTeX commands, 
+% remove them. 
+
+% DISALLOWED PACKAGES
+% \usepackage{authblk} -- This package is specifically forbidden
+% \usepackage{balance} -- This package is specifically forbidden
+% \usepackage{caption} -- This package is specifically forbidden
+% \usepackage{color (if used in text)
+% \usepackage{CJK} -- This package is specifically forbidden
+% \usepackage{float} -- This package is specifically forbidden
+% \usepackage{flushend} -- This package is specifically forbidden
+% \usepackage{fontenc} -- This package is specifically forbidden
+% \usepackage{fullpage} -- This package is specifically forbidden
+% \usepackage{geometry} -- This package is specifically forbidden
+% \usepackage{grffile} -- This package is specifically forbidden
+% \usepackage{hyperref} -- This package is specifically forbidden
+% \usepackage{navigator} -- This package is specifically forbidden
+% (or any other package that embeds links such as navigator or hyperref)
+% \indentfirst} -- This package is specifically forbidden
+% \layout} -- This package is specifically forbidden
+% \multicol} -- This package is specifically forbidden
+% \nameref} -- This package is specifically forbidden
+% \natbib} -- This package is specifically forbidden -- use the following workaround:
+% \usepackage{savetrees} -- This package is specifically forbidden
+% \usepackage{setspace} -- This package is specifically forbidden
+% \usepackage{stfloats} -- This package is specifically forbidden
+% \usepackage{tabu} -- This package is specifically forbidden
+% \usepackage{titlesec} -- This package is specifically forbidden
+% \usepackage{tocbibind} -- This package is specifically forbidden
+% \usepackage{ulem} -- This package is specifically forbidden
+% \usepackage{wrapfig} -- This package is specifically forbidden
+% DISALLOWED COMMANDS
+% \nocopyright -- Your paper will not be published if you use this command
+% \addtolength -- This command may not be used
+% \balance -- This command may not be used
+% \baselinestretch -- Your paper will not be published if you use this command
+% \clearpage -- No page breaks of any kind may be used for the final version of your paper
+% \columnsep -- This command may not be used
+% \newpage -- No page breaks of any kind may be used for the final version of your paper
+% \pagebreak -- No page breaks of any kind may be used for the final version of your paperr
+% \pagestyle -- This command may not be used
+% \tiny -- This is not an acceptable font size.
+% \vspace{- -- No negative value may be used in proximity of a caption, figure, table, section, subsection, subsubsection, or reference
+% \vskip{- -- No negative value may be used to alter spacing above or below a caption, figure, table, section, subsection, subsubsection, or reference
+
+\setcounter{secnumdepth}{0} %May be changed to 1 or 2 if section numbers are desired.
+
+% The file aaai19.sty is the style file for AAAI Press 
+% proceedings, working notes, and technical reports.
+%
+\setlength\titlebox{2.5in} % If your paper contains an overfull \vbox too high warning at the beginning of the document, use this
+% command to correct it. You may not alter the value below 2.5 in
+\title{CS5860 Homework 4: Convolutional Neural Networks}
+%Your title must be in mixed case, not sentence case. 
+% That means all verbs (including short verbs like be, is, using,and go), 
+% nouns, adverbs, adjectives should be capitalized, including both words in hyphenated terms, while
+% articles, conjunctions, and prepositions are lower case unless they
+% directly follow a colon or long dash
+\author{Mark Wesley Harris\\ % All authors must be in the same font size and format. Use \Large and \textbf to achieve this result when breaking a line
+% If you have multiple authors and multiple affiliations
+% use superscripts in text and roman font to identify them. For example, Sunil Issar,\textsuperscript{\rm 2} J. Scott Penberthy\textsuperscript{\rm 3} George Ferguson,\textsuperscript{\rm 4} Hans Guesgen\textsuperscript{\rm 5}. Note that the comma should be placed BEFORE the superscript for optimum readability
+University of Colorado Colorado Springs\\
+wharris2@uccs.edu % email address must be in roman text type, not monospace or sans serif
+}
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+%derp
+\end{abstract}
+
+\section{Introduction}
+
+\section{Neural Networks}
+The discoveries from Logistic Regression were made more powerful through the intention of Artificial Neural Networks
+(ANN's).
+ANN's simulate the interaction of neurons in order to obtain weights that can be used
+for making predictions on more complex problems.
+Each neuron makes use of the sigmoid function explored in Logistic Regression, to help extract features
+as information is processed. Nodes closer to the input layer are used to extract simple features,
+while those further down the pipeline have the ability to extract more complex features.
+It was later shown that by using the sigmoid function, ANN's of a single hidden layer are
+universal predictors \cite{universal}. In practice, however, many more layers and complexities are added to
+speed up processing and give better results than fine-tuning a single layer network.
+
+\subsection{Foward and Backward Propagation}
+A basic dense Neural Network is comprised of one input layer, one hidden layer,
+and one output layer, each of variable sizes.
+Let these sizes be called $N^{(i)}$, $N^{(h)}$, and $N^{(o)}$, respectively.
+The forward and backward propagation
+is calculated intrinsicly using matrix representations of the
+weights ($\mathbf{w_1},\mathbf{w_2}$) and biases ($\mathbf{b_0},\mathbf{b_1}$).
+The sizes of matrices $\mathbf{w}$ and $\mathbf{b}$ are dependent upon where they are used
+in the network.
+Since $\mathbf{w_1}$ and $\mathbf{b_1}$ are used in the hidden layer,
+they have shapes
+($N^{(h)}, N^{(i)}$) and ($N^{(h)}, 1$).
+Similarly, $\mathbf{w_2}$ and $\mathbf{b_2}$ have shapes
+($N^{(o)}, N^{(h)}$) and ($N^{(o)}, 1$).
+Forward propagation is defined below, in Equation \ref{eq:forward}.
+
+\begin{equation}
+\label{eq:forward}
+\hat{\mathbf{y}} = \sigma(\mathbf{w}^T\mathbf{x} + \mathbf{b}) \text{, where } \sigma(\mathbf{x}) = \frac{1}{1 + e^{-\mathbf{x}}}
+\end{equation}
+
+Notice that the activation function is denoted as $\sigma$.
+Given a multi-class classification problem,
+the definition of $\sigma$ actually changes to softmax for the final output layer.
+Thus for the last layer,
+$\sigma = \frac{e^{x_i}}{\sum_{i=0}^{i=n}e^{x_i}}$.
+Here $n$ represents the number of classes.
+
+Backward propagation involved more calculations using $\mathbf{w}$ and $\mathbf{b}$.
+Essentially, we are solving for the following value.
+
+\begin{equation}
+\label{eq:backward}
+\begin{split}
+\frac{\partial \mathcal{L}}{\partial w_j} &=
+\frac{\partial \mathcal{L}}{\partial o_j}
+\frac{\partial o_j}{\partial \text{net}_j}
+\frac{\partial \text{net}_j}{\partial w_j} \\
+&=
+\frac{\hat{\mathbf{y}} - \mathbf{y}}{\hat{\mathbf{y}}(1 - \hat{\mathbf{y}})}
+[\hat{\mathbf{y}}(1 - \hat{\mathbf{y}})]
+w_j \\
+&=
+(\hat{\mathbf{y}} - \mathbf{y})w_j
+\end{split}
+\end{equation}
+
+The same calculation is performed for the biases, $\mathbf{b}$.
+After further simplification, we obtain the following equations.
+Note that in either partial derivation of $\mathcal{L}$,
+$m$ represents the number of example vectors.
+
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial \mathbf{w}} =
+\frac{\mathbf{w}(\hat{\mathbf{y}} - \mathbf{y})^T}{m}
+\end{equation}
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial \mathbf{b}} =
+\frac{\sum_{i=1}^{m}(\hat{y}^{(i)} - y^{(i)})}{m}
+\end{equation}
+
+\subsection{Convolutional Neural Networks}
+While a basic ANN is suitable for more complex problems than we solved in Logistic Regression,
+there are some situations where it is impractical.
+Researchers found that more abstract learning goals, such as edge detection,
+were difficult to implement in a basic Neural Network.
+In fact, appropriate solutions for computer vision and image processing problems were still unobtainable.
+In an effort to help with learning these features, research of convolutions were applied
+to create a new class of Neural Networks, called
+Convolutional Neural Networks (CNN's).
+
+The general concept of convolution is shown in Figure \ref{fig:convolution} --
+a section of an image is pulled from and processed, in order to obtain a new representation called a ``filter''
+\cite{imagenet}.
+The filter allows for extracting high-level features more easily
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=7cm]{convolution.png}}
+\caption{Example of the process of convolution, where a portion of the input data is selected and processed.}
+\label{fig:convolution}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8cm]{max_pooling.png}}
+\caption{Max Pooling.}
+\label{fig:max_pooling}
+\end{figure}
+
+There are even more complicated applications of convolution, pooling, and dropout,
+however these are not explored here.
+ImageNet advances compared with implemented CNN's
+\cite{imagenet}.
+
+\section{Implementation}
+Keras was used for the library implementations.
+The Python code obtained Keras via the TensorFlow API \cite{python}.
+The R Script program was based off of an R Studio Blog post,
+which gave enough information to build the CNN's from \cite{r}.
+The Keras library provided appropriate means of evaluation,
+while analysis of our implementation came from observing confusion matrices
+and losses for test data.
+
+\subsection{Evaluation}
+There are ample datasets to choose from to evaluate the implemented neural network.
+We used the MNIST, CIFAR-10, and CIFAR-100 datasets for our evaluation.
+The MNIST dataset is made up of 60,000 (28 x 28) pixel images with only one channel (grey values),
+while the CIFAR datasets contain 60,000 (32 x 32) with 3 channels (red, green,
+and blue values).
+Figure \ref{fig:datasets} shows random samples of 4 classes from each dataset.
+
+Each convolution layer uses 64 (3 x 3) filters with a stride of 1.
+This results in a total of 64 (32 x 32 x 3) volumes for the CIFAR datasets,
+and 64 (28 x 28 x 1) volumes for MNIST.
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{mnist_0.png}
+  \caption{0}
+\end{subfigure}\hfil
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{mnist_4.png}
+  \caption{4}
+\end{subfigure}\hfil
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{mnist_6.png}
+  \caption{6}
+\end{subfigure}\hfil
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{mnist_9.png}
+  \caption{9}
+\end{subfigure}
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{cifar-10_1.png}
+  \caption{Automobile}
+\end{subfigure}\hfil
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{cifar-10_5.png}
+  \caption{Dog}
+\end{subfigure}\hfil
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{cifar-10_6.png}
+  \caption{Frog}
+\end{subfigure}\hfil
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{cifar-10_9.png}
+  \caption{Truck}
+\end{subfigure}
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{cifar-100_21.png}
+  \caption{Chimpanzee}
+\end{subfigure}\hfil
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{cifar-100_23.png}
+  \caption{Cloud}
+\end{subfigure}\hfil
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{cifar-100_82.png}
+  \caption{Sunflower}
+\end{subfigure}\hfil
+\begin{subfigure}{0.115\textwidth}
+  \includegraphics[width=\linewidth]{cifar-100_87.png}
+  \caption{Man}
+\end{subfigure}
+\caption{Examples from the MNIST (a - d), CIFAR-10 (e - h), and
+CIFAR-100 (i - l) datasets.}
+\label{fig:datasets}
+\end{figure}
+
+\subsection{Challenges}
+The most challenging part of implementation was working with the multiple datasets accross
+two different languages. While the datasets themselves are standardized, the method to import
+and ultimately the data in a network is ambiguous.
+The MNIST dataset was imported using the TensorFlow API, while
+we decided to import the CIFAR data from downloaded files.
+The latter was very involved, especially for reshaping the data for processing
+by the network. We later discovered that while the TensorFlow API does not provide
+a simple import for the CIFAR datasets, the Keras API does.
+Thus, the code for importing CIFAR could be replaced with a much simpler implementation.
+
+\section{Results}
+\begin{table}[t]
+\begin{centering}
+\bgroup
+\def\arraystretch{1.5}
+\begin{tabular}{| m{0.17\textwidth} | m{0.0625\textwidth} | m{0.0625\textwidth} | m{0.0625\textwidth} |} 
+\hline
+Method & MNIST & CIFAR-10 & CIFAR-100 \\ 
+\hline
+\hline
+Our Python NN & 0.56014 & 2.24362 & 4.61970 \\
+\hline
+\hline
+Library Python CNN & & & \\
+\hline
+Library R CNN & 0.03113 & 1.04461 & 2.81414 \\
+\hline
+\end{tabular}
+\caption{Best losses found for each dataset evaluated with each model.}
+\label{tbl:fits}
+\egroup
+\end{centering}
+\end{table}
+
+The results of our implementation for both of the CIFAR datasets was extreemely poor compared to
+results of the MNIST dataset.
+Even when the hyperparameters were tuned to acheive the best possible results,
+the basic Neural Network was not good enough for the increase in information from the colored image data.
+In an attempt to increase accuracy, the data was manipulated from a 3,072 long vector into one of length 1,024.
+The change did not affect results in a major positive way.
+
+Upon further examination of the confusion matrices, we determined the main cause of the
+drop in performance for CIFAR to step from overfitting of the data.
+The network was found to learn the weights and biases, however one or two examples were favored over the others.
+This effect was compounded in the CIFAR-100 dataset, to the extent that the network at times learned to predict
+only one of the 100 possible image classes.
+Therefore, overfitting was a major problem for running our implementation on CIFAR datasets.
+
+Overfitting is not uncommon for neural networks, and is one of the reasons CNN's are used in place of ANN's for
+processing image data \cite{imagenet}. If nothing else, the polarized results of our network proved that
+ANN's are suboptimal for situations where the data is more complex.
+The use of convolutions not only made processing data faster, but also increased the prediction power of the trained
+network. Table \ref{tbl:accuracies} shows how a differing number of convolution layers could affect network performance,
+in this case a comparison of 2 to 6 layers. In most cases the accuracies increased with greater number of convolutions,
+however results varied slightly and in general performance was affected very little.
+The number of convolutions was expected to affect more than was shown in our experimental results.
+It is likely the effect is due to the high number of filters used for each layer.
+A useful future experiment would be to examine the effect the number of filters has the network in each case.
+
+\begin{table}[t]
+\begin{centering}
+\bgroup
+\def\arraystretch{1.5}
+\begin{tabular}{| m{0.17\textwidth} | m{0.0625\textwidth} | m{0.0625\textwidth} | m{0.0625\textwidth} |} 
+\hline
+Method & MNIST & CIFAR-10 & CIFAR-100 \\ 
+\hline
+\hline
+\multicolumn{4}{|c|}{Python} \\
+\hline
+2 Convolution Layers & 0.9916 & 0.685 & 0.344 \\
+\hline
+6 Convolution Layers & 0.9905 & 0.688 & 0.343 \\
+\hline
+\multicolumn{4}{|c|}{R} \\
+\hline
+2 Convolution Layers & 0.9916 & 0.685 & 0.344 \\
+\hline
+6 Convolution Layers & 0.9905 & 0.688 & 0.343 \\
+\hline
+\end{tabular}
+\caption{Average accuracies found for each dataset given different model architectures.}
+\label{tbl:accuracies}
+\egroup
+\end{centering}
+\end{table}
+
+Figure \ref{fig:losses} shows how losses varied over the course of training our implementations.
+Each subplot reflects 4 different distributions collected for different combinations of hyperparameters.
+In general, the learning parameter $\lambda$ and number of hidden layer nodes were permuted with
+low and high values. The number of training epochs was kept the same, in order to give a basis of comparision
+between datasets. However, it is worth noting that training on the CIFAR datasets benefited from a higher number of
+epochs. In general, the CIFAR data gave better output for higher-precision hyperparameters. This is why $\lambda$
+was decreased and the number of hidden layer nodes was increased,
+compared to the values used for training on the MNIST dataset.
+The best hyperparameters found for each dataset are enumerated in Table \ref{tbl:params}.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=8.25cm]{mnist_loss.png}}
+\centerline{\includegraphics[width=8.25cm]{cifar-10_loss.png}}
+\centerline{\includegraphics[width=8.25cm]{cifar-100_loss.png}}
+\caption{Losses of our implementation during training on each dataset with different hyperparameters.}
+\label{fig:losses}
+\end{figure}
+
+\begin{table}[t]
+\begin{centering}
+\bgroup
+\def\arraystretch{1.5}
+\begin{tabular}{| m{0.17\textwidth} | m{0.0625\textwidth} | m{0.0625\textwidth} | m{0.0625\textwidth} |} 
+\hline
+Parameter & MNIST & CIFAR-10 & CIFAR-100 \\ 
+\hline
+\hline
+Learning Parameter & 0.01 & 0.001 & 0.001 \\
+\hline
+Hidden Nodes & 32 & 32 & 64 \\
+\hline
+\end{tabular}
+\caption{The best hyperparameters found out of those experimented with.}
+\label{tbl:params}
+\egroup
+\end{centering}
+\end{table}
+
+\section{Conclusion}
+
+\bibliography{hw4}
+\bibliographystyle{aaai}
+
+\onecolumn
+
+\pagebreak
+
+\begin{center}
+\section*{Appendix}
+\label{app:b}
+\end{center}
+
+\bigskip
+
+\footnotesize{
+\begin{minted}{python}
+\end{minted}
+\end{document}
