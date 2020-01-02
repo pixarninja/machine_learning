@@ -2,8 +2,8 @@
 
 This is a small repository of basic machine learning resources.
 The recommended workflow for these resources is as follows:
-1) Regression, 2) Decision Trees, 3) Logisitic Regression,
-and finally 4) Neural Networks. Each repository provides a LaTeX
+Regression, Decision Trees, Logisitic Regression,
+and finally Neural Networks. Each repository provides a LaTeX
 report and compile script that discusses the results of what was
 developed.
 
